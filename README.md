@@ -54,7 +54,7 @@ Deploy, distribute, and interact with your token directly from a simple browser 
    ```
 
 5. Go to localhost:3000, and click the button to claim your free tokens!
-   ![Example Image](popupwindow.png)
+   ![Example Image](popupwindow2.png)
    
 ## Roadmap
 
