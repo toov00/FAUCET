@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTK Token Faucet</title>
+  
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --accent: #00ff88;
+      --accent-dim: #00ff8833;
+      --text-primary: #ffffff;
+      --text-secondary: #888899;
+      --border: #2a2a3a;
+      --error: #ff4466;
+      --warning: #ffaa00;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      background-image: 
+        radial-gradient(ellipse at top, #00ff8808 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, #0066ff08 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Connect Section */
+    .connect-section {
+      text-align: center;
+    }
+
+    .wallet-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.5rem;
+      background: var(--accent-dim);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wallet-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--accent);
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--accent-dim);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-secondary);
+    }
+
+    /* Connected State */
+    .connected-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .address {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+
+    .network-badge {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .stat-value.highlight {
+      color: var(--accent);
+    }
+
+    /* Status Messages */
+    .status {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .status.info {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+
+    .status.success {
+      background: #00ff8815;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+    }
+
+    .status.error {
+      background: #ff446615;
+      color: var(--error);
+      border: 1px solid #ff446633;
+    }
+
+    .status.warning {
+      background: #ffaa0015;
+      color: var(--warning);
+      border: 1px solid #ffaa0033;
+    }
+
+    /* Cooldown Timer */
+    .cooldown-timer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      text-align: center;
+      color: var(--warning);
+      margin: 1rem 0;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hidden class */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .title {
+        font-size: 2rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">WEB3 FAUCET</div>
+      <h1 class="title">MTK Token</h1>
+      <p class="subtitle">Claim 100 free tokens every 24 hours</p>
+    </header>
+
+    <!-- Not Connected State -->
+    <div id="connect-card" class="card connect-section">
+      <div class="wallet-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+        </svg>
+      </div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        Connect your wallet to claim tokens
+      </p>
+      <button id="connect-btn" class="btn btn-primary">
+        Connect Wallet
+      </button>
+      <div id="connect-error" class="status error hidden" style="margin-top: 1rem;"></div>
+    </div>
+
+    <!-- Connected State -->
+    <div id="main-card" class="card hidden">
+      <div class="connected-header">
+        <span id="user-address" class="address">0x...</span>
+        <span id="network-badge" class="network-badge">Sepolia</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">Your Balance</div>
+          <div id="user-balance" class="stat-value highlight">0 MTK</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Faucet Balance</div>
+          <div id="faucet-balance" class="stat-value">0 MTK</div>
+        </div>
+      </div>
+
+      <!-- Status Area -->
+      <div id="status-area"></div>
+
+      <!-- Cooldown Timer -->
+      <div id="cooldown-section" class="hidden">
+        <p style="text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
+          Next claim available in:
+        </p>
+        <div id="cooldown-timer" class="cooldown-timer">00:00:00</div>
+      </div>
+
+      <!-- Claim Button -->
+      <button id="claim-btn" class="btn btn-primary">
+        Claim 100 MTK
+      </button>
+
+      <!-- Disconnect -->
+      <button id="disconnect-btn" class="btn btn-secondary" style="margin-top: 1rem;">
+        Disconnect
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Built for learning Web3 development</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="https://sepolia.etherscan.io" target="_blank">View on Etherscan</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Ethers.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
+  
+  <script>
+    // ============================================
+    // ⚠️  UPDATE THESE WITH YOUR DEPLOYED ADDRESSES
+    // ============================================
+    const TOKEN_ADDRESS = "";
+    const FAUCET_ADDRESS = "";
+    
+    // Expected chain ID (Sepolia = 11155111)
+    const EXPECTED_CHAIN_ID = 11155111;
+    const CHAIN_NAME = "Sepolia";
+
+    // Contract ABIs (only the functions we need)
+    const TOKEN_ABI = [
+      "function balanceOf(address account) view returns (uint256)",
+      "function symbol() view returns (string)",
+      "function decimals() view returns (uint8)"
+    ];
+
+    const FAUCET_ABI = [
+      "function claim() external",
+      "function canClaim(address user) view returns (bool)",
+      "function timeUntilNextClaim(address user) view returns (uint256)",
+      "function claimAmount() view returns (uint256)",
+      "function faucetBalance() external view returns (uint256)",
+      "event TokensClaimed(address indexed user, uint256 amount)"
+    ];
+
+    // State
+    let provider = null;
+    let signer = null;
+    let userAddress = null;
+    let tokenContract = null;
+    let faucetContract = null;
+    let cooldownInterval = null;
+
+    // DOM Elements
+    const connectCard = document.getElementById('connect-card');
+    const mainCard = document.getElementById('main-card');
+    const connectBtn = document.getElementById('connect-btn');
+    const claimBtn = document.getElementById('claim-btn');
+    const disconnectBtn = document.getElementById('disconnect-btn');
+    const connectError = document.getElementById('connect-error');
+    const userAddressEl = document.getElementById('user-address');
+    const networkBadge = document.getElementById('network-badge');
+    const userBalanceEl = document.getElementById('user-balance');
+    const faucetBalanceEl = document.getElementById('faucet-balance');
+    const statusArea = document.getElementById('status-area');
+    const cooldownSection = document.getElementById('cooldown-section');
+    const cooldownTimer = document.getElementById('cooldown-timer');
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    function formatAddress(address) {
+      return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    }
+
+    function formatTokens(wei, decimals = 18) {
+      const value = Number(ethers.formatUnits(wei, decimals));
+      return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    }
+
+    function formatTime(seconds) {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function showStatus(message, type = 'info') {
+      statusArea.innerHTML = `<div class="status ${type}">${message}</div>`;
+    }
+
+    function clearStatus() {
+      statusArea.innerHTML = '';
+    }
+
+    // ============================================
+    // WALLET CONNECTION
+    // ============================================
+
+    async function connectWallet() {
+      try {
+        connectBtn.disabled = true;
+        connectBtn.innerHTML = '<span class="spinner"></span>Connecting...';
+        connectError.classList.add('hidden');
+
+        // Check if MetaMask is installed
+        if (!window.ethereum) {
+          throw new Error('Please install MetaMask to use this dApp');
+        }
+
+        // Request account access
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts'
+        });
+
+        if (accounts.length === 0) {
+          throw new Error('No accounts found. Please unlock MetaMask.');
+        }
+
+        // Create provider and signer
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        userAddress = await signer.getAddress();
+
+        // Check network
+        const network = await provider.getNetwork();
+        if (Number(network.chainId) !== EXPECTED_CHAIN_ID) {
+          throw new Error(`Please switch to ${CHAIN_NAME} network`);
+        }
+
+        // Initialize contracts
+        tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
+        faucetContract = new ethers.Contract(FAUCET_ADDRESS, FAUCET_ABI, signer);
+
+        // Update UI
+        connectCard.classList.add('hidden');
+        mainCard.classList.remove('hidden');
+        userAddressEl.textContent = formatAddress(userAddress);
+        networkBadge.textContent = CHAIN_NAME;
+
+        // Load initial data
+        await refreshData();
+
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+        window.ethereum.on('chainChanged', () => window.location.reload());
+
+      } catch (error) {
+        console.error('Connection error:', error);
+        connectError.textContent = error.message;
+        connectError.classList.remove('hidden');
+        connectBtn.disabled = false;
+        connectBtn.innerHTML = 'Connect Wallet';
+      }
+    }
+
+    function handleAccountsChanged(accounts) {
+      if (accounts.length === 0) {
+        disconnect();
+      } else {
+        window.location.reload();
+      }
+    }
+
+    function disconnect() {
+      provider = null;
+      signer = null;
+      userAddress = null;
+      tokenContract = null;
+      faucetContract = null;
+      
+      if (cooldownInterval) {
+        clearInterval(cooldownInterval);
+        cooldownInterval = null;
+      }
+
+      mainCard.classList.add('hidden');
+      connectCard.classList.remove('hidden');
+      connectBtn.disabled = false;
+      connectBtn.innerHTML = 'Connect Wallet';
+      clearStatus();
+    }
+
+    // ============================================
+    // DATA FETCHING
+    // ============================================
+
+    async function refreshData() {
+      try {
+        // Get balances
+        const [userBalance, faucetBalance] = await Promise.all([
+          tokenContract.balanceOf(userAddress),
+          faucetContract.faucetBalance()
+        ]);
+
+        userBalanceEl.textContent = `${formatTokens(userBalance)} MTK`;
+        faucetBalanceEl.textContent = `${formatTokens(faucetBalance)} MTK`;
+
+        // Check claim status
+        await updateClaimStatus();
+
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+        showStatus('Error loading data. Check console for details.', 'error');
+      }
+    }
+
+    async function updateClaimStatus() {
+      try {
+        const canClaim = await faucetContract.canClaim(userAddress);
+        
+        if (canClaim) {
+          // User can claim
+          claimBtn.disabled = false;
+          claimBtn.textContent = 'Claim 100 MTK';
+          cooldownSection.classList.add('hidden');
+          
+          if (cooldownInterval) {
+            clearInterval(cooldownInterval);
+            cooldownInterval = null;
+          }
+        } else {
+          // User must wait
+          claimBtn.disabled = true;
+          claimBtn.textContent = 'Cooldown Active';
+          cooldownSection.classList.remove('hidden');
+          
+          // Start countdown
+          startCooldownTimer();
+        }
+      } catch (error) {
+        console.error('Error checking claim status:', error);
+      }
+    }
+
+    async function startCooldownTimer() {
+      // Clear existing interval
+      if (cooldownInterval) {
+        clearInterval(cooldownInterval);
+      }
+
+      const updateTimer = async () => {
+        try {
+          const timeLeft = await faucetContract.timeUntilNextClaim(userAddress);
+          const seconds = Number(timeLeft);
+          
+          if (seconds <= 0) {
+            clearInterval(cooldownInterval);
+            cooldownInterval = null;
+            await updateClaimStatus();
+            return;
+          }
+          
+          cooldownTimer.textContent = formatTime(seconds);
+        } catch (error) {
+          console.error('Error updating timer:', error);
+        }
+      };
+
+      // Update immediately, then every second
+      await updateTimer();
+      cooldownInterval = setInterval(updateTimer, 1000);
+    }
+
+    // ============================================
+    // CLAIMING TOKENS
+    // ============================================
+
+    async function claimTokens() {
+      try {
+        claimBtn.disabled = true;
+        claimBtn.innerHTML = '<span class="spinner"></span>Claiming...';
+        clearStatus();
+
+        // Send transaction
+        const tx = await faucetContract.claim();
+        showStatus('Transaction submitted. Waiting for confirmation...', 'info');
+
+        // Wait for confirmation
+        const receipt = await tx.wait();
+        
+        if (receipt.status === 1) {
+          showStatus('🎉 Successfully claimed 100 MTK!', 'success');
+        } else {
+          throw new Error('Transaction failed');
+        }
+
+        // Refresh data
+        await refreshData();
+
+      } catch (error) {
+        console.error('Claim error:', error);
+        
+        let errorMessage = 'Failed to claim tokens.';
+        
+        if (error.message.includes('user rejected')) {
+          errorMessage = 'Transaction cancelled.';
+        } else if (error.message.includes('Please wait')) {
+          errorMessage = 'Please wait for cooldown to finish.';
+        } else if (error.message.includes('Faucet is empty')) {
+          errorMessage = 'Faucet is empty! No tokens left to claim.';
+        }
+        
+        showStatus(errorMessage, 'error');
+        await updateClaimStatus();
+      }
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+
+    connectBtn.addEventListener('click', connectWallet);
+    claimBtn.addEventListener('click', claimTokens);
+    disconnectBtn.addEventListener('click', disconnect);
+
+    // Check if already connected on page load
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          connectWallet();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
