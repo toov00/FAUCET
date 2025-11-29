@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MTK Token Faucet</title>
   
-  <!-- Google Font -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -18,184 +18,292 @@
     }
 
     :root {
-      --bg-primary: #0a0a0f;
-      --bg-secondary: #12121a;
-      --bg-card: #1a1a24;
-      --accent: #00ff88;
-      --accent-dim: #00ff8833;
-      --text-primary: #ffffff;
-      --text-secondary: #888899;
-      --border: #2a2a3a;
-      --error: #ff4466;
-      --warning: #ffaa00;
+      --bg: #f8f6f3;
+      --bg-warm: #f3f0eb;
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --card-border: rgba(255, 255, 255, 0.9);
+      --accent: #e07a5f;
+      --accent-soft: rgba(224, 122, 95, 0.12);
+      --accent-glow: rgba(224, 122, 95, 0.25);
+      --text: #2d2a26;
+      --text-soft: #7a756e;
+      --text-muted: #a8a29e;
+      --success: #81b29a;
+      --success-soft: rgba(129, 178, 154, 0.15);
+      --warning: #f2cc8f;
+      --warning-soft: rgba(242, 204, 143, 0.2);
+      --error: #c97064;
+      --error-soft: rgba(201, 112, 100, 0.12);
+      --shadow: 0 4px 24px rgba(45, 42, 38, 0.06);
+      --shadow-lg: 0 12px 48px rgba(45, 42, 38, 0.1);
     }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       padding: 2rem;
-      background-image: 
-        radial-gradient(ellipse at top, #00ff8808 0%, transparent 50%),
-        radial-gradient(ellipse at bottom, #0066ff08 0%, transparent 50%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background decoration */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -10%;
+      left: -10%;
+      width: 40vw;
+      height: 40vw;
+      background: radial-gradient(circle, rgba(129, 178, 154, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
-      max-width: 480px;
+      max-width: 420px;
       width: 100%;
+      position: relative;
+      z-index: 1;
     }
 
     /* Header */
     .header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.8s ease-out;
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .logo {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.875rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
       color: var(--accent);
-      letter-spacing: 0.2em;
-      margin-bottom: 0.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
     }
 
     .title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+      font-family: 'Instrument Serif', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .title span {
+      font-style: italic;
+      color: var(--accent);
     }
 
     .subtitle {
-      color: var(--text-secondary);
-      font-size: 1rem;
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      font-weight: 400;
     }
 
     /* Card */
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
       padding: 2rem;
-      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      animation: fadeUp 0.8s ease-out 0.1s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Connect Section */
     .connect-section {
       text-align: center;
+      padding: 1rem 0;
     }
 
-    .wallet-icon {
-      width: 64px;
-      height: 64px;
+    .wallet-illustration {
+      width: 80px;
+      height: 80px;
       margin: 0 auto 1.5rem;
-      background: var(--accent-dim);
+      position: relative;
+    }
+
+    .wallet-circle {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent-soft) 0%, transparent 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      animation: pulse 3s ease-in-out infinite;
     }
 
-    .wallet-icon svg {
-      width: 32px;
-      height: 32px;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .wallet-circle svg {
+      width: 36px;
+      height: 36px;
       stroke: var(--accent);
+      stroke-width: 1.5;
+    }
+
+    .connect-text {
+      color: var(--text-soft);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
     }
 
     /* Buttons */
     .btn {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
       padding: 1rem 2rem;
-      border-radius: 12px;
+      border-radius: 14px;
       border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       width: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-primary {
       background: var(--accent);
-      color: var(--bg-primary);
+      color: white;
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px var(--accent-dim);
+      box-shadow: 0 8px 28px var(--accent-glow);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     .btn-primary:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
     }
 
-    .btn-secondary {
+    .btn-ghost {
       background: transparent;
-      color: var(--text-primary);
-      border: 1px solid var(--border);
+      color: var(--text-soft);
+      border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--text-secondary);
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.12);
+      color: var(--text);
     }
 
-    /* Connected State */
+    /* Connected Header */
     .connected-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
       margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .address {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.875rem;
-      color: var(--accent);
-      background: var(--accent-dim);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      background: var(--bg-warm);
+      padding: 0.5rem 0.875rem;
+      border-radius: 10px;
     }
 
     .network-badge {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      background: var(--bg-secondary);
-      padding: 0.375rem 0.75rem;
-      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--success);
+      background: var(--success-soft);
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    /* Stats Grid */
-    .stats-grid {
+    /* Stats */
+    .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
 
-    .stat-box {
-      background: var(--bg-secondary);
-      border-radius: 12px;
+    .stat {
+      background: var(--bg-warm);
+      border-radius: 16px;
       padding: 1.25rem;
+      text-align: center;
     }
 
     .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       margin-bottom: 0.5rem;
     }
 
     .stat-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text);
     }
 
     .stat-value.highlight {
@@ -205,76 +313,86 @@
     /* Status Messages */
     .status {
       text-align: center;
-      padding: 1rem;
+      padding: 0.875rem 1rem;
       border-radius: 12px;
       margin-bottom: 1rem;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
+      font-weight: 500;
     }
 
     .status.info {
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
+      background: var(--bg-warm);
+      color: var(--text-soft);
     }
 
     .status.success {
-      background: #00ff8815;
-      color: var(--accent);
-      border: 1px solid var(--accent-dim);
+      background: var(--success-soft);
+      color: #5a8a72;
     }
 
     .status.error {
-      background: #ff446615;
+      background: var(--error-soft);
       color: var(--error);
-      border: 1px solid #ff446633;
     }
 
     .status.warning {
-      background: #ffaa0015;
-      color: var(--warning);
-      border: 1px solid #ffaa0033;
+      background: var(--warning-soft);
+      color: #b8963d;
     }
 
-    /* Cooldown Timer */
-    .cooldown-timer {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 2rem;
+    /* Cooldown */
+    .cooldown-section {
       text-align: center;
-      color: var(--warning);
-      margin: 1rem 0;
+      padding: 1rem 0;
+    }
+
+    .cooldown-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .cooldown-timer {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 2.25rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.05em;
     }
 
     /* Footer */
     .footer {
       text-align: center;
       margin-top: 2rem;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
+      animation: fadeUp 0.8s ease-out 0.2s both;
     }
 
     .footer a {
-      color: var(--accent);
+      font-size: 0.8rem;
+      color: var(--text-muted);
       text-decoration: none;
+      transition: color 0.2s ease;
     }
 
     .footer a:hover {
-      text-decoration: underline;
+      color: var(--accent);
     }
 
-    /* Hidden class */
+    /* Utilities */
     .hidden {
       display: none !important;
     }
 
-    /* Loading spinner */
     .spinner {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top-color: currentColor;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.7s linear infinite;
       margin-right: 8px;
+      vertical-align: middle;
     }
 
     @keyframes spin {
@@ -282,21 +400,32 @@
     }
 
     /* Responsive */
-    @media (max-width: 520px) {
+    @media (max-width: 480px) {
       body {
-        padding: 1rem;
+        padding: 1.25rem;
+        justify-content: flex-start;
+        padding-top: 3rem;
       }
       
       .card {
         padding: 1.5rem;
+        border-radius: 20px;
       }
       
       .title {
-        font-size: 2rem;
+        font-size: 2.5rem;
       }
       
-      .stats-grid {
-        grid-template-columns: 1fr;
+      .stats {
+        gap: 0.75rem;
+      }
+
+      .stat {
+        padding: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.1rem;
       }
     }
   </style>
@@ -305,73 +434,54 @@
   <div class="container">
     <!-- Header -->
     <header class="header">
-      <div class="logo">WEB3 FAUCET</div>
-      <h1 class="title">MTK Token</h1>
-      <p class="subtitle">Claim 100 free tokens every 24 hours</p>
+      <div class="logo">Faucet</div>
     </header>
 
-    <!-- Not Connected State -->
+    <!-- Connect Card -->
     <div id="connect-card" class="card connect-section">
-      <div class="wallet-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
-        </svg>
+      <div class="wallet-illustration">
+        <div class="wallet-circle">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
+          </svg>
+        </div>
       </div>
-      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-        Connect your wallet to claim tokens
-      </p>
-      <button id="connect-btn" class="btn btn-primary">
-        Connect Wallet
-      </button>
+      <button id="connect-btn" class="btn btn-primary">CLAIM TOKENS</button>
       <div id="connect-error" class="status error hidden" style="margin-top: 1rem;"></div>
     </div>
 
-    <!-- Connected State -->
+    <!-- Main Card -->
     <div id="main-card" class="card hidden">
       <div class="connected-header">
         <span id="user-address" class="address">0x...</span>
         <span id="network-badge" class="network-badge">Sepolia</span>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-box">
+      <div class="stats">
+        <div class="stat">
           <div class="stat-label">Your Balance</div>
           <div id="user-balance" class="stat-value highlight">0 MTK</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">Faucet Balance</div>
+        <div class="stat">
+          <div class="stat-label">Faucet</div>
           <div id="faucet-balance" class="stat-value">0 MTK</div>
         </div>
       </div>
 
-      <!-- Status Area -->
       <div id="status-area"></div>
 
-      <!-- Cooldown Timer -->
-      <div id="cooldown-section" class="hidden">
-        <p style="text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
-          Next claim available in:
-        </p>
+      <div id="cooldown-section" class="cooldown-section hidden">
+        <p class="cooldown-label">Next claim available in</p>
         <div id="cooldown-timer" class="cooldown-timer">00:00:00</div>
       </div>
 
-      <!-- Claim Button -->
-      <button id="claim-btn" class="btn btn-primary">
-        Claim 100 MTK
-      </button>
-
-      <!-- Disconnect -->
-      <button id="disconnect-btn" class="btn btn-secondary" style="margin-top: 1rem;">
-        Disconnect
-      </button>
+      <button id="claim-btn" class="btn btn-primary">Claim 100 MTK</button>
+      <button id="disconnect-btn" class="btn btn-ghost" style="margin-top: 0.75rem;">Disconnect</button>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-      <p>Built for learning Web3 development</p>
-      <p style="margin-top: 0.5rem;">
-        <a href="https://sepolia.etherscan.io" target="_blank">View on Etherscan</a>
-      </p>
+      <a href="https://sepolia.etherscan.io" target="_blank" rel="noopener">View on Etherscan ↗</a>
     </footer>
   </div>
 
@@ -382,14 +492,12 @@
     // ============================================
     // ⚠️  UPDATE THESE WITH YOUR DEPLOYED ADDRESSES
     // ============================================
-    const TOKEN_ADDRESS = "";
-    const FAUCET_ADDRESS = "";
+    const TOKEN_ADDRESS = "0x0904152ED3b82FE833B7bf7A7a39d549F6ab9bb1";
+    const FAUCET_ADDRESS = "0x8ca4b395fD6cF25A52f78fb6F77C69F4481761a0";
     
-    // Expected chain ID (Sepolia = 11155111)
     const EXPECTED_CHAIN_ID = 11155111;
     const CHAIN_NAME = "Sepolia";
 
-    // Contract ABIs (only the functions we need)
     const TOKEN_ABI = [
       "function balanceOf(address account) view returns (uint256)",
       "function symbol() view returns (string)",
@@ -405,7 +513,6 @@
       "event TokensClaimed(address indexed user, uint256 amount)"
     ];
 
-    // State
     let provider = null;
     let signer = null;
     let userAddress = null;
@@ -413,7 +520,6 @@
     let faucetContract = null;
     let cooldownInterval = null;
 
-    // DOM Elements
     const connectCard = document.getElementById('connect-card');
     const mainCard = document.getElementById('main-card');
     const connectBtn = document.getElementById('connect-btn');
@@ -427,10 +533,6 @@
     const statusArea = document.getElementById('status-area');
     const cooldownSection = document.getElementById('cooldown-section');
     const cooldownTimer = document.getElementById('cooldown-timer');
-
-    // ============================================
-    // HELPER FUNCTIONS
-    // ============================================
 
     function formatAddress(address) {
       return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -456,22 +558,16 @@
       statusArea.innerHTML = '';
     }
 
-    // ============================================
-    // WALLET CONNECTION
-    // ============================================
-
     async function connectWallet() {
       try {
         connectBtn.disabled = true;
         connectBtn.innerHTML = '<span class="spinner"></span>Connecting...';
         connectError.classList.add('hidden');
 
-        // Check if MetaMask is installed
         if (!window.ethereum) {
           throw new Error('Please install MetaMask to use this dApp');
         }
 
-        // Request account access
         const accounts = await window.ethereum.request({
           method: 'eth_requestAccounts'
         });
@@ -480,31 +576,25 @@
           throw new Error('No accounts found. Please unlock MetaMask.');
         }
 
-        // Create provider and signer
         provider = new ethers.BrowserProvider(window.ethereum);
         signer = await provider.getSigner();
         userAddress = await signer.getAddress();
 
-        // Check network
         const network = await provider.getNetwork();
         if (Number(network.chainId) !== EXPECTED_CHAIN_ID) {
           throw new Error(`Please switch to ${CHAIN_NAME} network`);
         }
 
-        // Initialize contracts
         tokenContract = new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, provider);
         faucetContract = new ethers.Contract(FAUCET_ADDRESS, FAUCET_ABI, signer);
 
-        // Update UI
         connectCard.classList.add('hidden');
         mainCard.classList.remove('hidden');
         userAddressEl.textContent = formatAddress(userAddress);
         networkBadge.textContent = CHAIN_NAME;
 
-        // Load initial data
         await refreshData();
 
-        // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
         window.ethereum.on('chainChanged', () => window.location.reload());
 
@@ -544,13 +634,8 @@
       clearStatus();
     }
 
-    // ============================================
-    // DATA FETCHING
-    // ============================================
-
     async function refreshData() {
       try {
-        // Get balances
         const [userBalance, faucetBalance] = await Promise.all([
           tokenContract.balanceOf(userAddress),
           faucetContract.faucetBalance()
@@ -559,7 +644,6 @@
         userBalanceEl.textContent = `${formatTokens(userBalance)} MTK`;
         faucetBalanceEl.textContent = `${formatTokens(faucetBalance)} MTK`;
 
-        // Check claim status
         await updateClaimStatus();
 
       } catch (error) {
@@ -573,7 +657,6 @@
         const canClaim = await faucetContract.canClaim(userAddress);
         
         if (canClaim) {
-          // User can claim
           claimBtn.disabled = false;
           claimBtn.textContent = 'Claim 100 MTK';
           cooldownSection.classList.add('hidden');
@@ -583,12 +666,9 @@
             cooldownInterval = null;
           }
         } else {
-          // User must wait
           claimBtn.disabled = true;
           claimBtn.textContent = 'Cooldown Active';
           cooldownSection.classList.remove('hidden');
-          
-          // Start countdown
           startCooldownTimer();
         }
       } catch (error) {
@@ -597,7 +677,6 @@
     }
 
     async function startCooldownTimer() {
-      // Clear existing interval
       if (cooldownInterval) {
         clearInterval(cooldownInterval);
       }
@@ -620,14 +699,9 @@
         }
       };
 
-      // Update immediately, then every second
       await updateTimer();
       cooldownInterval = setInterval(updateTimer, 1000);
     }
-
-    // ============================================
-    // CLAIMING TOKENS
-    // ============================================
 
     async function claimTokens() {
       try {
@@ -635,20 +709,17 @@
         claimBtn.innerHTML = '<span class="spinner"></span>Claiming...';
         clearStatus();
 
-        // Send transaction
         const tx = await faucetContract.claim();
         showStatus('Transaction submitted. Waiting for confirmation...', 'info');
 
-        // Wait for confirmation
         const receipt = await tx.wait();
         
         if (receipt.status === 1) {
-          showStatus('🎉 Successfully claimed 100 MTK!', 'success');
+          showStatus('Successfully claimed 100 MTK!', 'success');
         } else {
           throw new Error('Transaction failed');
         }
 
-        // Refresh data
         await refreshData();
 
       } catch (error) {
@@ -669,15 +740,10 @@
       }
     }
 
-    // ============================================
-    // EVENT LISTENERS
-    // ============================================
-
     connectBtn.addEventListener('click', connectWallet);
     claimBtn.addEventListener('click', claimTokens);
     disconnectBtn.addEventListener('click', disconnect);
 
-    // Check if already connected on page load
     window.addEventListener('load', async () => {
       if (window.ethereum) {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
