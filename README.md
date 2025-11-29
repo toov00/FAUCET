@@ -2,7 +2,7 @@
 # FAUCET
 
 A complete ERC-20 token and faucet ecosystem running on the Ethereum Sepolia test network. 
-Deploy, distribute, and interact with your token directly from a simple browser application.
+Deploy, distribute, and interact with your token directly from a simple browser application!
 
 ## Getting Started
 
