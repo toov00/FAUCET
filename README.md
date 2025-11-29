@@ -53,7 +53,7 @@ Deploy, distribute, and interact with your token directly from a simple browser 
    npx serve frontend
    ```
 
-5. Go to localhost:3000, and click the button to claim your free tokens!
+5. Navigate to localhost:3000, and click the button to claim your free tokens!
    ![Example Image](popupwindow2.png)
    
 ## Roadmap
