@@ -1,63 +1,157 @@
+# Faucet
 
-# FAUCET
+A complete ERC-20 token and faucet ecosystem running on the Ethereum Sepolia testnet. Deploy, distribute, and interact with your custom token through a simple browser interface.
 
-A complete ERC-20 token and faucet ecosystem running on the Ethereum Sepolia test network. 
-Deploy, distribute, and interact with your token directly from a simple browser application!
+## Features
+
+* Custom ERC-20 token deployment
+* Faucet contract for token distribution
+* One-click token claiming via web interface
+* Rate-limited claims to prevent abuse
+* Sepolia testnet integration
 
 ## Getting Started
 
 ### Prerequisites
 
-* Install modules
-  ```sh
+* Node.js (v20+)
+```sh
   brew install nvm
-  ```
+  nvm install 20
+  nvm use 20
+```
+* MetaMask wallet with Sepolia ETH ([get free Sepolia ETH](https://sepoliafaucet.com))
+* Alchemy or Infura account for RPC access
+
 ### Installation
 
 1. Clone the repo
-   ```sh
+```sh
    git clone https://github.com/toov00/FAUCET.git
-   ```
-2. Install NPM packages
-   ```sh
+   cd FAUCET
+```
+2. Install dependencies
+```sh
    npm install
-   ```
-3. Enter your wallet's private key in `.env`
-   ```js
-   const PRIVATE_KEY = 'ENTER PRIVATE KEY';
-   ```
-4. Enter your RPC url in `.env`
-   ```js
-   const RPC_URL = 'ENTER RPC URL';
-   ```
+```
+3. Create environment file
+```sh
+   cp .env.example .env
+```
+4. Configure `.env` with your credentials
+```env
+   PRIVATE_KEY=your-wallet-private-key
+   RPC_URL=https://eth-sepolia.g.alchemy.com/v2/your-api-key
+```
+   > ⚠️ Never commit your private key! Keep `.env` in `.gitignore`
 
 ## Usage
 
-1. Deploy the faucet
-   ```sh
-   npx hardhat run scripts/deploy.js --network sepolia
-   ```
+### 1. Deploy Contracts
 
-2. Enter your token address in `frontend/index.html`
-   ```js
-   const TOKEN_ADDRESS = 'ENTER TOKEN ADDRESS';
-   ```
+Deploy the token and faucet to Sepolia:
+```sh
+npx hardhat run scripts/deploy.js --network sepolia
+```
 
-3. Enter your faucet address in `frontend/index.html`
-   ```js
-   const FAUCET_ADDRESS = 'ENTER FAUCET ADDRESS';
-   ```
+Save the outputted addresses:
+```
+Token deployed to: 0x...
+Faucet deployed to: 0x...
+```
 
-4. Run the frontend
-   ```sh
-   npx serve frontend
-   ```
+### 2. Configure Frontend
 
-5. Navigate to localhost:3000, and click the button to claim your free tokens!
-   ![Example Image](popupwindow2.png)
-   
+Update `frontend/index.html` with your deployed addresses:
+```js
+const TOKEN_ADDRESS = '0x...';   // Your token address
+const FAUCET_ADDRESS = '0x...';  // Your faucet address
+```
+
+### 3. Start the App
+```sh
+npx serve frontend
+```
+
+### 4. Claim Tokens
+
+1. Navigate to `http://localhost:3000`
+2. Connect your MetaMask wallet
+3. Click "Claim Tokens" to receive free tokens!
+
+![Faucet Interface](popupwindow2.png)
+
+## Project Structure
+```
+FAUCET/
+├── contracts/
+│   ├── Token.sol          # ERC-20 token contract
+│   └── Faucet.sol         # Faucet distribution contract
+├── scripts/
+│   └── deploy.js          # Deployment script
+├── frontend/
+│   └── index.html         # Web interface
+├── hardhat.config.js
+├── .env.example
+└── package.json
+```
+
+## Smart Contracts
+
+### Token.sol
+Standard ERC-20 token with:
+* Configurable name, symbol, and supply
+* Minting capability for faucet
+
+### Faucet.sol
+Token distribution contract with:
+* Claim cooldown period (prevents spam)
+* Configurable claim amount
+* Owner-only refill function
+
+## Configuration
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `PRIVATE_KEY` | Deployer wallet private key | `abc123...` |
+| `RPC_URL` | Sepolia RPC endpoint | `https://eth-sepolia.g.alchemy.com/v2/...` |
+| `TOKEN_ADDRESS` | Deployed token address | `0x...` |
+| `FAUCET_ADDRESS` | Deployed faucet address | `0x...` |
+
+## Useful Commands
+
+| Command | Description |
+|---------|-------------|
+| `npx hardhat compile` | Compile contracts |
+| `npx hardhat test` | Run tests |
+| `npx hardhat run scripts/deploy.js --network sepolia` | Deploy to Sepolia |
+| `npx serve frontend` | Start frontend |
+
 ## Roadmap
 
-- [x] Add Usage details
-- [ ] Reframe as Chrome Extension
+- [x] ERC-20 token contract
+- [x] Faucet contract with rate limiting
+- [x] Web frontend for claiming
+- [ ] Chrome Extension version
+- [ ] Claim history display
+- [ ] Multiple token support
+- [ ] Admin dashboard for refilling faucet
+- [ ] ENS integration
 
+## Tech Stack
+
+* Solidity
+* Hardhat
+* ethers.js
+* HTML/CSS/JavaScript
+* MetaMask SDK
+
+## Resources
+
+* [Sepolia Faucet](https://sepoliafaucet.com) — Get free testnet ETH
+* [Alchemy](https://www.alchemy.com) — RPC provider
+* [OpenZeppelin ERC-20](https://docs.openzeppelin.com/contracts/4.x/erc20) — Token standard reference
+
+## License
+
+Distributed under the MIT License. 
